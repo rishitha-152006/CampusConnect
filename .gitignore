@@ -1,0 +1,15 @@
+node_modules/
+client/node_modules/
+server/node_modules/
+
+.env
+.env.local
+.env.production
+
+dist/
+build/
+
+uploads/*
+!uploads/.gitkeep
+
+.DS_Store
