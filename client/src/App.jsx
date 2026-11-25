@@ -285,19 +285,31 @@ const handleProductImageChange = (e) => {
   });
 
   // Contact Seller
-  const contactSeller = (email, productName) => {
+  // Contact Seller using Gmail
+const contactSeller = (email, productName) => {
     if (!email) {
-      alert("Seller contact information is not available.");
-      return;
+        alert("Seller contact information is not available.");
+        return;
     }
 
-    window.location.href =
-      `mailto:${email}?subject=${encodeURIComponent(
-        "Interested in " + productName
-      )}&body=${encodeURIComponent(
-        "Hello, I am interested in your product: " + productName
-      )}`;
-  };
+    const subject = `Interested in ${productName}`;
+
+    const body = `Hello,
+
+I am interested in your product: ${productName}.
+
+Please let me know more details.
+
+Thank you.`;
+
+    const gmailURL =
+        `https://mail.google.com/mail/?view=cm&fs=1` +
+        `&to=${encodeURIComponent(email)}` +
+        `&su=${encodeURIComponent(subject)}` +
+        `&body=${encodeURIComponent(body)}`;
+
+    window.open(gmailURL, "_blank");
+};
 
   // Dashboard
   if (user) {
@@ -531,25 +543,23 @@ const handleProductImageChange = (e) => {
   required
 />
 
-{productForm.image && (
+{imagePreview && (
   <div className="image-preview">
     <img
-  src={`${SERVER_URL}${product.image}`}
-  alt={product.name}
-  onError={(e) => {
-    console.log("Image loading failed:", e.currentTarget.src);
-    e.currentTarget.style.display = "none";
-  }}
-/>
+      src={imagePreview}
+      alt="Product Preview"
+    />
+
     <button
       type="button"
       className="remove-image"
-      onClick={() =>
-        setProductForm({
-          ...productForm,
+      onClick={() => {
+        setProductForm((prev) => ({
+          ...prev,
           image: ""
-        })
-      }
+        }));
+        setImagePreview("");
+      }}
     >
       Remove Image
     </button>
@@ -677,12 +687,13 @@ const handleProductImageChange = (e) => {
                   <div className="product-image">
                     {product.image ? (
                       <img
-                        src={product.image}
-                        alt={product.name}
-                        onError={(e) => {
-                          e.currentTarget.style.display = "none";
-                        }}
-                      />
+  src={`${SERVER_URL}${product.image}`}
+  alt={product.name}
+  onError={(e) => {
+    console.log("Image loading failed:", e.currentTarget.src);
+    e.currentTarget.style.display = "none";
+  }}
+/>
                     ) : (
                       <div className="image-placeholder">
                         📦
